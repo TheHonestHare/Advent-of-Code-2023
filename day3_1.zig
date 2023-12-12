@@ -31,6 +31,8 @@ fn solution(data: []const u8) u32 {
     for(data, 0..) |char, i| {
         if (char < '0' or char > '9') continue;
         num = num*10 + char - '0';
+
+        if (!isPart) isPart = isSymbol(data[@max(i,length+1)-length-1]) or isSymbol(data[@max(i,1)-1]) or isSymbol(data[@min(i+length-1,data.len-1)]);
         if (!std.ascii.isDigit(data[@min(i+1,data.len-1)])) {
             if (isPart or isSymbol(data[@max(i,length+1)-length-1])
                        or isSymbol(data[@max(i,length)-length]) 
@@ -45,17 +47,13 @@ fn solution(data: []const u8) u32 {
             }
             num = 0;
             continue;
-
-            
         }
-        if (isPart) continue;
-        isPart = isSymbol(data[@max(i,length+1)-length-1]) or isSymbol(data[@max(i,1)-1]) or isSymbol(data[@min(i+length-1,data.len-1)]);
     }
     return acc;
 }
 
 fn isSymbol(char: u8) bool {
-    return !(char >= '0' and char <= '9') and char != '.' and char != '\n';
+    return (char < '0' or char > '9') and char != '.' and char != '\n';
 }
 
 test {
